@@ -1,0 +1,152 @@
+{
+   "debug":false,
+   "simulation":{
+      "time":{
+         "factor":3,
+         "max dt":0.05
+      },
+      "grass":{
+         "texture":"food1.png",
+         "energy":{
+            "initial":50,
+            "max":500,
+            "growth factor":5
+        }
+      },
+      "animal":{
+         "random walk low energy":false,
+         "meal retention":0.7,
+         "feed time":0.4,
+	  "min energy" : 20,
+         "reproduction":{
+               "delivery time":10,
+               "mating time":5
+         },
+        "idle":{
+            "min":5,
+            "max":10,
+            "probability":0.01
+        },
+        "satiety":{
+            "min":600,
+            "max":700
+        },
+        "sheep":{
+            "mass":1,
+            "size":110,
+            "longevity":40000,
+            "max speed":50,
+            "reproduction":{
+               "gestation time":10,
+               "min children":1,
+               "max children":2
+            },
+            "view":{
+               "range":6.283185307,
+               "distance":450
+            },
+            "random walk":{
+               "jitter":2.0,
+               "radius":20,
+               "distance":160
+            },
+            "energy":{
+               "initial":500,
+               "min mating male":450,
+               "min mating female":600,
+               "loss mating male":250,
+               "loss female per child":100,
+               "loss factor":0.07,
+               "bite":15
+            },
+            "texture":{
+               "white":"sheep-white.png",
+               "black":"sheep-black.png",
+               "leader":"sheep-leader.png"
+            }
+         },
+         "wolf":{
+            "mass":1,
+            "size":300,
+            "longevity":50000,
+            "max speed":300,
+            "speed":0,
+            "rotation":{
+               "speed":1.570796327,
+               "angle precision":.125663706
+            },
+            "score for action":50,
+            "reproduction":{
+               "gestation time":10,
+               "min children":1,
+               "max children":1
+            },
+            "view":{
+               "range":4,
+               "distance":550
+            },
+            "random walk":{
+               "jitter":50,
+               "radius":100,
+               "distance":100
+            },
+            "energy":{
+               "initial":650,
+               "min mating male":400,
+               "min mating female":400,
+               "loss mating male":100,
+               "loss female per child":50,
+               "loss factor":0.08
+            },
+            "idle":{
+               "min":5,
+               "max":10,
+               "probability":0.05
+            },
+            "satiety":{
+            "min":700,
+            "max":1000
+            },
+            "texture":"loup-blanc2.png"
+         }
+      },
+      "virus" : {
+         "sparsity":.3,
+         "initial quantity":5,
+         "min quantity for infection":7,
+         "infection probaility":.001,
+         "texture":"virus.png",
+         "infection range":250
+      },
+      "immune system" : {
+         "health recovery":1,
+         "health penalty":0.1,
+         "defense effectiveness":0.12,
+         "defense variability":0.2,
+         "adaptive range":5
+      },
+      "genome" : {
+         "black allele prevalence":.3,
+         "mutability innate immune system":.3
+      },
+      "world":{
+         "size":4000,
+         "texture":"ground3.png",
+          "debug texture":"sand.png"
+      }
+   },
+   "stats":{
+      "refresh rate":1
+   },
+   "window":{
+      "antialiasing level":4,
+      "title":"INFOSV Simulation",
+      "simulation":{
+         "width":800,
+         "height":800
+      },
+      "stats":{
+         "height":200
+      }
+   }
+}

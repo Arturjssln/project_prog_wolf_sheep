@@ -1,0 +1,104 @@
+import os
+
+AddOption('--cfg',
+           dest='cfg',
+           type='string',
+           nargs=1,
+           action='store',
+           metavar='DIR',
+           help='custom cfg filename')
+
+env = Environment(CFG = GetOption('cfg'))
+
+if env['PLATFORM'] == 'darwin':
+    env['CXX'] = 'clang++'
+    env['CCFLAGS'] = '-stdlib=libc++ '
+    env['LINKFLAGS'] = '-stdlib=libc++ '
+    env.Append(CCFLAGS = ' -I/usr/local/include/ ')    env.Append(LINKFLAGS = ' -L/usr/local/lib/ ')
+elif env['PLATFORM'] == 'posix':
+    env['CXX'] = 'g++'
+
+includeFlags = '-I{sfmlcosun}/include/ -I{catch} -I/usr/local/include/'.format(
+  sfmlcosun = "/usr/local/softs/SFML/",
+  catch = "extlib/Catch/include/"
+)
+
+#scons debug=1 will activate the -g option
+
+debug = ARGUMENTS.get('debug', 0)
+
+if int(debug):
+   env.Append(CCFLAGS = '-std=c++11 -Wall -Wextra -g -lasan -fsanitize=address -fno-omit-frame-pointer ' + includeFlags)
+
+   #env.Append(CCFLAGS = '-std=c++11 -Wall -Wextra -g ' + includeFlags)
+else:
+    env.Append(CCFLAGS = '-std=c++11 -Wall -Wextra ' + includeFlags)
+
+env.Append(LIBS = ['sfml-system', 'sfml-window', 'sfml-graphics'])
+
+if int(debug):
+   env.Append(LINKFLAGS = '-L/usr/local/softs/SFML/lib -fsanitize=address -fno-omit-frame-pointer ')
+
+   #env.Append(LINKFLAGS = '-L/usr/local/softs/SFML/lib -g ')
+else:
+  env.Append(LINKFLAGS = '-L/usr/local/softs/SFML/lib ')
+
+env.Decider('content')
+
+# Use CPPPATH to automatically detect changes in header files and rebuild cpp files that need those headers.
+# This also automatically add -I option.
+env.Append(CPPPATH = '../src/') # pwd is the build directory
+
+
+# Source files:
+app_src         = Glob('Application.cpp')
+conf_src        = Glob('Config.cpp')
+gene_src        = Glob('Genetics/*.cpp')
+cfg_src         = Glob('JSON/*.cpp')
+env_src         = Glob('Env/*.cpp')
+rand_src        = Glob('Random/*.cpp')
+stats_src       = Glob('Stats/*.cpp')
+utility_src     = Glob('Utility/*.cpp')
+
+src_files = app_src + cfg_src + env_src + rand_src + stats_src + utility_src + conf_src + gene_src
+objects=env.Object(source=src_files)
+
+
+all_src_files = src_files
+def DefineProgram(name, additional_src):
+    for file in additional_src:
+        all_src_files.append(file)
+
+    target = env.Program(name, source = objects + additional_src)
+    env.Alias(name, target)
+    run = env.Command(name+".out",[],"./build/"+name+" $CFG", ENV = os.environ)
+    env.Alias(name+"-run", run)
+    env.Depends(run, target)
+    env.AlwaysBuild(run)
+    env.Default(target) # prevent auto execution of 'run' targets
+                        # when running `scons -Q`, for example
+    ddd = env.Command(name+".ddd.out",[],"ddd --args ./build/"+name+" $CFG", ENV = os.environ)
+    env.Depends(ddd, target)
+    env.Alias(name+"-ddd", ddd)
+
+    if env['CXX'] == 'clang++':
+        lldb = env.Command(name+".lldb.out",[],"lldb ./build/"+name+" $CFG", ENV = os.environ)
+        env.Depends(lldb, target)
+        env.Alias(name+"-lldb", lldb)
+
+
+DefineProgram('application', Glob('FinalApplication.cpp'))
+DefineProgram('EatableTest', Glob('Tests/UnitTests/EatableTest.cpp') + Glob('Tests/UnitTests/CatchTests.cpp'))
+DefineProgram('ObstacleTest', Glob('Tests/UnitTests/ObstacleTest.cpp') + Glob('Tests/UnitTests/CatchTests.cpp'))
+DefineProgram('PPSTest', Glob('Tests/GraphicalTests/PPSTest.cpp'))
+DefineProgram('ReproductionTest', Glob('Tests/GraphicalTests/ReproductionTest.cpp'))
+DefineProgram('InfectionTest', Glob('Tests/GraphicalTests/InfectionTest.cpp'))
+DefineProgram('InfectionTestManyAnimals', Glob('Tests/GraphicalTests/InfectionTestManyAnimals.cpp'))
+
+
+if env['CXX'] == 'clang++':
+    analyze_cmd = "clang++ -std=c++11 -stdlib=libc++ -Wall -Wextra -Werror " + includeFlags + " -Isrc/ --analyze -Xanalyzer -analyzer-output='html' "
+    file_list = ' '.join('"' + str(f) + '"' for f in all_src_files)
+    analyze = env.Command("analyze.out", all_src_files, analyze_cmd + file_list, ENV = os.environ)
+    env.Alias("analyze", analyze)
+

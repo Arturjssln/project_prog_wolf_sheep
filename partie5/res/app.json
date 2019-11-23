@@ -1,0 +1,157 @@
+{
+   "debug":true,
+   "simulation":{
+      "time":{
+         "factor":0.5,
+         "max dt":0.05
+      },
+      "grass":{
+         "texture":"food1.png",
+         "energy":{
+            "initial":25,
+            "max":60,
+            "growth factor":30
+        }
+      },
+      "animal":{
+         "random walk low energy":false,
+         "meal retention":0.7,
+         "feed time":0.4,
+         "min energy" : 20,
+         "base consumption" : 0.0,
+         "proximity threshold":30,
+         "avoidance coefficient": 10000,
+         "reproduction":{
+               "delivery time":5,
+               "mating time":3,
+               "time before mating":10
+         },
+        "idle":{
+            "min":5,
+            "max":10,
+            "probability":0.5
+        },
+        "satiety":{
+            "min":600,
+            "max":800
+        },
+        "sheep":{
+            "mass":1,
+            "size":50,
+            "longevity":40000,
+            "max speed":100,
+            "reproduction":{
+               "gestation time":10,
+               "min children":1,
+               "max children":2
+            },
+            "view":{
+               "range":6.283185307,
+               "distance":150
+            },
+            "random walk":{
+               "jitter":2.0,
+               "radius":20,
+               "distance":75
+            },
+            "energy":{
+               "initial":1000,
+               "min mating male":450,
+               "min mating female":600,
+               "loss mating male":250,
+               "loss female per child":100,
+               "loss factor":0.07,
+               "bite":15
+            },
+            "texture":{
+               "white":"sheep-white.png",
+               "black":"sheep-black.png",
+               "leader":"crown.png"
+            }
+         },
+         "wolf":{
+            "mass":1,
+            "size":60,
+            "longevity":50000,
+            "max speed":150,
+            "speed":0,
+            "rotation":{
+               "speed":1.570796327,
+               "angle precision":.125663706
+            },
+            "score for action":50,
+            "reproduction":{
+               "gestation time":10,
+               "min children":1,
+               "max children":1
+            },
+            "view":{
+               "range":4,
+               "distance":150
+            },
+            "random walk":{
+               "jitter":5,
+               "radius":25,
+               "distance":100
+            },
+            "energy":{
+               "initial":1000,
+               "min mating male":400,
+               "min mating female":400,
+               "loss mating male":100,
+               "loss female per child":50,
+               "loss factor":0.08
+            },
+            "idle":{
+               "min":5,
+               "max":10,
+               "probability":0.05
+            },
+            "satiety":{
+            "min":700,
+            "max":1000
+            },
+            "texture":"wolf-black.png"
+         }
+      },
+      "virus" : {
+         "sparsity":.3,
+         "initial quantity":5,
+         "min quantity for infection":7,
+         "infection probability":.002,
+         "texture":"virus.png",
+         "infection range":250
+      },
+      "immune system" : {
+         "health recovery":1,
+         "health penalty":0.1,
+         "defense effectiveness":0.12,
+         "defense variability":0.2,
+         "adaptive baseline":0.7,
+         "adaptive range":5
+      },
+      "genome" : {
+         "black allele prevalence":.3,
+         "mutability innate immune system":.3
+      },
+      "world":{
+         "size":1000,
+         "texture":"ground3.png",
+          "debug texture":"ground3.png"
+      }
+   },
+   "stats":{
+      "refresh rate":0.1
+   },
+   "window":{
+      "antialiasing level":4,
+      "title":"PROJET EMMA ET ARTUR ",
+      "simulation":{
+         "width":1000,
+         "height":1000
+      },
+      "stats":{
+         "height":200
+      }
+   }
+}
